@@ -1,161 +1,256 @@
-import { Canvas, useFrame } from '@react-three/fiber';
-import { useRef, useEffect } from 'react';
+import { Canvas, useFrame } from "@react-three/fiber";
+import {
+  Environment,
+  Float,
+  MeshTransmissionMaterial,
+  ContactShadows,
+  Sparkles,
+} from "@react-three/drei";
 
-function FloatingIcon({ position, speed = 1, children }) {
+import { Suspense, useEffect, useMemo, useRef } from "react";
+
+function HeroSphere() {
   const ref = useRef();
-  useFrame((state, delta) => {
-    ref.current.rotation.x += delta * 0.1 * speed;
-    ref.current.rotation.y += delta * 0.15 * speed;
-    ref.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * speed) * 0.3;
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+
+    if (!ref.current) return;
+
+    ref.current.rotation.y = t * 0.15;
+    ref.current.rotation.x = Math.sin(t * 0.3) * 0.08;
+    ref.current.position.y = Math.sin(t) * 0.08;
   });
-  return <group ref={ref} position={position}>{children}</group>;
-}
 
-function mat(color) {
-  return <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.6} roughness={0.3} metalness={0.4} />;
-}
-
-function CodeBrackets({ color }) {
   return (
-    <group scale={0.8}>
-      <mesh position={[-0.4, 0.3, 0]} rotation={[0, 0, Math.PI / 4]}>
-        <boxGeometry args={[0.6, 0.1, 0.1]} />
-        {mat(color)}
+    <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
+      <mesh ref={ref}>
+        <icosahedronGeometry args={[1.2, 32]} />
+
+        <MeshTransmissionMaterial
+          backside
+          samples={12}
+          thickness={0.5}
+          roughness={0.08}
+          transmission={1}
+          ior={1.35}
+          chromaticAberration={0.06}
+          anisotropy={0.2}
+          distortion={0.18}
+          distortionScale={0.25}
+          temporalDistortion={0.15}
+          clearcoat={1}
+          attenuationColor="#7C83FF"
+          attenuationDistance={0.5}
+        />
       </mesh>
-      <mesh position={[-0.4, -0.3, 0]} rotation={[0, 0, -Math.PI / 4]}>
-        <boxGeometry args={[0.6, 0.1, 0.1]} />
-        {mat(color)}
-      </mesh>
-      <mesh rotation={[0, 0, -Math.PI / 7]}>
-        <boxGeometry args={[0.12, 1, 0.1]} />
-        {mat(color)}
-      </mesh>
-      <mesh position={[0.4, 0.3, 0]} rotation={[0, 0, -Math.PI / 4]}>
-        <boxGeometry args={[0.6, 0.1, 0.1]} />
-        {mat(color)}
-      </mesh>
-      <mesh position={[0.4, -0.3, 0]} rotation={[0, 0, Math.PI / 4]}>
-        <boxGeometry args={[0.6, 0.1, 0.1]} />
-        {mat(color)}
-      </mesh>
-    </group>
+    </Float>
   );
 }
 
-function Gear({ color }) {
-  const teeth = Array.from({ length: 8 });
-  return (
-    <group scale={0.65}>
-      <mesh>
-        <cylinderGeometry args={[0.55, 0.55, 0.25, 16]} />
-        {mat(color)}
-      </mesh>
-      {teeth.map((_, i) => {
-        const angle = (i / teeth.length) * Math.PI * 2;
-        const x = Math.cos(angle) * 0.65;
-        const z = Math.sin(angle) * 0.65;
-        return (
-          <mesh key={i} position={[x, 0, z]} rotation={[0, -angle, 0]}>
-            <boxGeometry args={[0.18, 0.25, 0.15]} />
-            {mat(color)}
-          </mesh>
-        );
-      })}
-      <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <cylinderGeometry args={[0.18, 0.18, 0.3, 12]} />
-        {mat(color)}
-      </mesh>
-    </group>
-  );
-}
+function Crystal({ position, color }) {
+  const ref = useRef();
 
-function TerminalIcon({ color }) {
-  return (
-    <group scale={0.75}>
-      <mesh>
-        <boxGeometry args={[1.2, 0.8, 0.1]} />
-        {mat(color)}
-      </mesh>
-      <mesh position={[0, -0.55, 0]}>
-        <boxGeometry args={[0.25, 0.15, 0.1]} />
-        {mat(color)}
-      </mesh>
-      <mesh position={[0, -0.72, 0]}>
-        <boxGeometry args={[0.6, 0.08, 0.3]} />
-        {mat(color)}
-      </mesh>
-    </group>
-  );
-}
+  useFrame((state) => {
+    if (!ref.current) return;
 
-function Crystal({ color }) {
+    const t = state.clock.elapsedTime;
+
+    ref.current.rotation.x += 0.004;
+    ref.current.rotation.y += 0.003;
+
+    ref.current.position.y =
+      position[1] + Math.sin(t * 1.8 + position[0]) * 0.12;
+  });
+
   return (
-    <mesh scale={0.6}>
-      <octahedronGeometry args={[0.7, 0]} />
-      {mat(color)}
+    <mesh ref={ref} position={position}>
+      <octahedronGeometry args={[0.18]} />
+
+      <meshStandardMaterial
+        color={color}
+        emissive={color}
+        emissiveIntensity={1}
+        roughness={0.15}
+        metalness={0.4}
+      />
     </mesh>
   );
 }
 
-function ScrollRig({ children }) {
+function Lights() {
+  return (
+    <>
+      <ambientLight intensity={0.5} />
+
+      <directionalLight position={[4, 5, 2]} intensity={2} />
+
+      <pointLight
+        position={[3, 2, 2]}
+        intensity={18}
+        color="#7C83FF"
+      />
+
+      <pointLight
+        position={[-3, -2, 1]}
+        intensity={14}
+        color="#A855F7"
+      />
+
+      <spotLight
+        position={[0, 5, 5]}
+        intensity={20}
+        angle={0.35}
+        penumbra={1}
+      />
+    </>
+  );
+}
+
+function MouseRig({ children }) {
   const group = useRef();
-  const scrollY = useRef(0);
-  const mouse = useRef({ x: 0, y: 0 });
 
-  useEffect(() => {
-    const onScroll = () => { scrollY.current = window.scrollY; };
-    const onMouseMove = (e) => {
-      mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
-      mouse.current.y = (e.clientY / window.innerHeight) * 2 - 1;
-    };
-    window.addEventListener('scroll', onScroll);
-    window.addEventListener('mousemove', onMouseMove);
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('mousemove', onMouseMove);
-    };
-  }, []);
+  useFrame((state) => {
+    if (!group.current) return;
 
-  useFrame(() => {
-    if (group.current) {
-      group.current.rotation.y = scrollY.current * 0.0006;
-      group.current.position.y = scrollY.current * 0.0015;
-      group.current.rotation.x += (mouse.current.y * 0.15 - group.current.rotation.x) * 0.03;
-      group.current.rotation.z += (-mouse.current.x * 0.15 - group.current.rotation.z) * 0.03;
-    }
+    const x = state.mouse.x * 0.45;
+    const y = state.mouse.y * 0.25;
+
+    group.current.rotation.y +=
+      (x - group.current.rotation.y) * 0.05;
+
+    group.current.rotation.x +=
+      (-y - group.current.rotation.x) * 0.05;
   });
 
   return <group ref={group}>{children}</group>;
 }
 
+function ScrollRig({ children }) {
+  const group = useRef();
+
+  const scroll = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      scroll.current =
+        window.scrollY /
+        (document.body.scrollHeight - window.innerHeight);
+    };
+
+    window.addEventListener("scroll", onScroll);
+
+    return () =>
+      window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useFrame(() => {
+    if (!group.current) return;
+
+    group.current.rotation.y =
+      scroll.current * Math.PI * 1.5;
+
+    group.current.position.y =
+      -scroll.current * 0.8;
+
+    group.current.rotation.z =
+      scroll.current * 0.25;
+  });
+
+  return <group ref={group}>{children}</group>;
+}
+
+function FloatingCrystals() {
+  const crystals = useMemo(
+    () => [
+      {
+        position: [2, 1.2, -1],
+        color: "#7C83FF",
+      },
+      {
+        position: [-2, 1.5, -0.5],
+        color: "#A855F7",
+      },
+      {
+        position: [1.7, -1.5, 0.2],
+        color: "#60A5FA",
+      },
+      {
+        position: [-1.5, -1.2, -1.3],
+        color: "#8B5CF6",
+      },
+      {
+        position: [0, 2.2, -2],
+        color: "#C084FC",
+      },
+    ],
+    []
+  );
+
+  return (
+    <>
+      {crystals.map((item, index) => (
+        <Crystal
+          key={index}
+          position={item.position}
+          color={item.color}
+        />
+      ))}
+    </>
+  );
+}
+
+function Effects() {
+  return (
+    <>
+      <Environment preset="city" />
+
+      <Sparkles
+        count={90}
+        scale={10}
+        size={2}
+        speed={0.3}
+      />
+
+      <ContactShadows
+        opacity={0.28}
+        blur={2.8}
+        scale={12}
+        far={5}
+        resolution={1024}
+        position={[0, -1.8, 0]}
+      />
+    </>
+  );
+}
+
 export default function Scene3D() {
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none">
-      <Canvas camera={{ position: [0, 0, 6], fov: 50 }}>
-        <ambientLight intensity={0.4} />
-        <pointLight position={[5, 5, 5]} intensity={1.2} color="#E9C46A" />
-        <pointLight position={[-5, -3, 3]} intensity={1} color="#B565D9" />
-        <pointLight position={[0, 5, -5]} intensity={0.8} color="#5FB8B0" />
-        <ScrollRig>
-          <FloatingIcon position={[-2.6, 1.5, -2]} speed={0.6}>
-            <CodeBrackets color="#E9C46A" />
-          </FloatingIcon>
-          <FloatingIcon position={[2.8, -1, -3]} speed={0.5}>
-            <Gear color="#5FB8B0" />
-          </FloatingIcon>
-          <FloatingIcon position={[1.5, 2.3, -4]} speed={0.7}>
-            <TerminalIcon color="#EF6F6C" />
-          </FloatingIcon>
-          <FloatingIcon position={[-2, -2.2, -3]} speed={0.9}>
-            <Gear color="#B565D9" />
-          </FloatingIcon>
-          <FloatingIcon position={[3.2, 2, -5]} speed={0.4}>
-            <Crystal color="#B565D9" />
-          </FloatingIcon>
-          <FloatingIcon position={[-3.3, -0.5, -4]} speed={0.6}>
-            <Crystal color="#E9C46A" />
-          </FloatingIcon>
-        </ScrollRig>
+    <div className="fixed inset-0 z-0">
+      <Canvas
+        camera={{
+          position: [0, 0, 5],
+          fov: 45,
+        }}
+        gl={{
+          antialias: true,
+          alpha: true,
+        }}
+        dpr={[1, 2]}
+      >
+        <Suspense fallback={null}>
+          <Lights />
+
+          <Effects />
+
+          <MouseRig>
+            <ScrollRig>
+              <HeroSphere />
+
+              <FloatingCrystals />
+            </ScrollRig>
+          </MouseRig>
+        </Suspense>
       </Canvas>
     </div>
   );

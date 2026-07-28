@@ -1,41 +1,74 @@
-import { useEffect, useRef, useState } from 'react';
+import { motion } from "framer-motion";
+import AboutCards from "./about/AboutCards";
 
 export default function About() {
-  const ref = useRef(null);
-  const [offset, setOffset] = useState(0);
-
-  useEffect(() => {
-    const onScroll = () => {
-      if (!ref.current) return;
-      const rect = ref.current.getBoundingClientRect();
-      const speed = 0.08;
-      setOffset(rect.top * speed);
-    };
-    window.addEventListener('scroll', onScroll);
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
   return (
-    <section id="about" className="px-6 py-20 max-w-3xl mx-auto overflow-hidden">
-      <div ref={ref} style={{ transform: `translateY(${offset}px)` }}>
-        <h2 className="font-mono text-amber text-sm mb-2">// sobre</h2>
-        <p className="text-lg leading-relaxed text-ink/90">
-          Estudante de tecnologia atualmente cursando Análise e Desenvolvimento de Sistemas
-          pela UCDB e Sistemas de Informação pela UFMS, com interesse em desenvolvimento de
-          sistemas, suporte técnico, infraestrutura e soluções voltadas para tecnologia da
-          informação.
-        </p>
-        <p className="text-lg leading-relaxed text-ink/90 mt-4">
-          Possuo conhecimentos em Python, HTML, CSS, Java, JavaScript, lógica de programação
-          e ambientes Windows e Linux, além de interesse constante em desenvolvimento web,
-          sistemas, infraestrutura e resolução de problemas técnicos.
-        </p>
-        <p className="text-lg leading-relaxed text-ink/90 mt-4">
-          Perfil proativo, facilidade de aprendizado e gosto por tecnologia — buscando
-          oportunidades que me permitam desenvolver experiência prática em TI, contribuindo
-          com dedicação, adaptação rápida e aprendizado contínuo.
-        </p>
+    <section
+      id="about"
+      className="max-w-7xl mx-auto px-6 py-28"
+    >
+      <div className="grid lg:grid-cols-2 gap-20 items-center">
+
+        {/* Texto */}
+
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: .7 }}
+          viewport={{ once: true }}
+        >
+          <p className="uppercase tracking-[0.35em] text-amber text-sm font-mono mb-4">
+            Sobre mim
+          </p>
+
+          <h2 className="text-4xl md:text-5xl font-bold text-ink leading-tight mb-8">
+            Transformando ideias em experiências digitais modernas.
+          </h2>
+
+          <p className="text-muted leading-8 mb-6">
+            Atualmente curso <strong className="text-ink">Análise e Desenvolvimento de Sistemas</strong> na UCDB
+            e <strong className="text-ink">Sistemas de Informação</strong> na UFMS,
+            buscando aprofundar conhecimentos em desenvolvimento Full Stack,
+            Engenharia de Software, Inteligência Artificial e Data Analytics.
+          </p>
+
+          <p className="text-muted leading-8 mb-10">
+            Gosto de desenvolver aplicações que unem design,
+            performance e tecnologia, criando interfaces intuitivas
+            e soluções que realmente geram valor.
+          </p>
+
+          <div className="flex flex-wrap gap-4">
+
+            <a
+              href="#projects"
+              className="px-7 py-3 rounded-xl bg-amber text-bg font-semibold hover:scale-105 transition"
+            >
+              Ver Projetos
+            </a>
+
+            <a
+              href="#contact"
+              className="px-7 py-3 rounded-xl border border-surface-light hover:border-amber transition"
+            >
+              Contato
+            </a>
+
+          </div>
+
+        </motion.div>
+
+        {/* Cards */}
+
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: .7 }}
+          viewport={{ once: true }}
+        >
+          <AboutCards />
+        </motion.div>
+
       </div>
     </section>
   );

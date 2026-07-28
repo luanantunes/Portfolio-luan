@@ -1,33 +1,42 @@
 export default function BackgroundGradient() {
   return (
-    <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+    <div className="fixed inset-0 overflow-hidden pointer-events-none -z-20">
+
       <div
-        className="absolute w-[500px] h-[500px] rounded-full opacity-20 blur-3xl"
+        className="blur-orb w-[700px] h-[700px]"
         style={{
-          background: 'radial-gradient(circle, #E9C46A, transparent 70%)',
-          top: '10%',
-          left: '5%',
-          animation: 'blob-move-1 18s ease-in-out infinite',
+          top: "-220px",
+          left: "-220px",
+          background:
+            "radial-gradient(circle, rgba(99,102,241,.35), transparent 70%)",
+          animation: "blob1 20s ease-in-out infinite",
         }}
       />
+
       <div
-        className="absolute w-[550px] h-[550px] rounded-full opacity-20 blur-3xl"
+        className="blur-orb w-[650px] h-[650px]"
         style={{
-          background: 'radial-gradient(circle, #B565D9, transparent 70%)',
-          top: '50%',
-          right: '5%',
-          animation: 'blob-move-2 22s ease-in-out infinite',
+          right: "-180px",
+          top: "20%",
+          background:
+            "radial-gradient(circle, rgba(168,85,247,.28), transparent 70%)",
+          animation: "blob2 24s ease-in-out infinite",
         }}
       />
+
       <div
-        className="absolute w-[400px] h-[400px] rounded-full opacity-15 blur-3xl"
+        className="blur-orb w-[550px] h-[550px]"
         style={{
-          background: 'radial-gradient(circle, #5FB8B0, transparent 70%)',
-          bottom: '5%',
-          left: '35%',
-          animation: 'blob-move-3 20s ease-in-out infinite',
+          bottom: "-180px",
+          left: "35%",
+          background:
+            "radial-gradient(circle, rgba(59,130,246,.20), transparent 70%)",
+          animation: "blob3 18s ease-in-out infinite",
         }}
       />
+
+      <div className="noise" />
+
     </div>
   );
 }
