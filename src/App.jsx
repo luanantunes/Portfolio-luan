@@ -7,7 +7,7 @@ import SystemStatus from "./components/stats/SystemStatus";
 
 import Skills from "./components/Skills";
 
-import ProjectDatabase from "./components/projectDatabase/ProjectDatabase";
+import ProjectDatabase from "./components/ProjectDatabase/ProjectDatabase";
 
 import Projects from "./components/Projects";
 
