@@ -6,7 +6,7 @@ import SectionTitle from "../ui/SectionTitle";
 import JourneyCard from "./JourneyCard";
 import JourneyLine from "./JourneyLine";
 
-import journey from "../../data/journeyData";
+import journey from "../../data/JourneyData";
 
 export default function Journey() {
   return (

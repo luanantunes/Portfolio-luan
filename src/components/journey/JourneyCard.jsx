@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 import Badge from "../ui/Badge";
 import GlassCard from "../ui/GlassCard";
-import TimelineNode from "./TimelineNode";
+import TimelineNode from "./TimeLineNode";
 
 export default function JourneyCard({ item, index }) {
   const left = index % 2 === 0;
