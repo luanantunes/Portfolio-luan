@@ -3,34 +3,39 @@ import { motion } from "framer-motion";
 export default function TimelineNode() {
   return (
     <motion.div
-      initial={{ scale: 0 }}
-      whileInView={{ scale: 1 }}
+      initial={{ scale: 0, opacity: 0 }}
+      whileInView={{ scale: 1, opacity: 1 }}
       viewport={{ once: true }}
       transition={{
         type: "spring",
         stiffness: 260,
-        damping: 18,
+        damping: 20,
       }}
-      className="absolute left-1/2 -translate-x-1/2 z-20"
+      className="absolute left-1/2 z-20 -translate-x-1/2"
     >
-      {/* Glow */}
-      <div className="absolute inset-0 rounded-full bg-primary blur-xl opacity-40 scale-[2]" />
+      {/* Brilho sutil */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 scale-150 rounded-full bg-primary/30 blur-lg"
+      />
 
-      {/* Anel */}
+      {/* Anel pulsante */}
       <motion.div
+        aria-hidden="true"
         animate={{
-          scale: [1, 1.35, 1],
-          opacity: [0.5, 0.15, 0.5],
+          scale: [1, 1.3, 1],
+          opacity: [0.45, 0.12, 0.45],
         }}
         transition={{
-          duration: 2.5,
+          duration: 3,
           repeat: Infinity,
+          ease: "easeInOut",
         }}
-        className="absolute inset-0 rounded-full border border-primary"
+        className="absolute inset-0 rounded-full border border-primary/80"
       />
 
       {/* Núcleo */}
-      <div className="relative w-5 h-5 rounded-full bg-primary border-4 border-bg shadow-[0_0_20px_rgba(233,196,106,.8)]" />
+      <div className="relative h-4 w-4 rounded-full border-[3px] border-bg bg-primary shadow-[0_0_12px_rgba(233,196,106,0.5)]" />
     </motion.div>
   );
 }

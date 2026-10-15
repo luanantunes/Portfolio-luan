@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 
 import Badge from "../ui/Badge";
@@ -9,14 +10,13 @@ export default function JourneyCard({ item, index }) {
 
   return (
     <div className="relative">
-
-      {/* Nó da Timeline */}
+      {/* Nó da timeline */}
       <TimelineNode />
 
       <motion.div
         initial={{
           opacity: 0,
-          x: left ? -80 : 80,
+          x: left ? -50 : 50,
         }}
         whileInView={{
           opacity: 1,
@@ -27,7 +27,8 @@ export default function JourneyCard({ item, index }) {
           amount: 0.35,
         }}
         transition={{
-          duration: 0.7,
+          duration: 0.65,
+          ease: "easeOut",
         }}
         className={`
           flex
@@ -35,122 +36,77 @@ export default function JourneyCard({ item, index }) {
           ${left ? "justify-start pr-[52%]" : "justify-end pl-[52%]"}
         `}
       >
-
         <GlassCard
           className="
-            relative
-            overflow-hidden
             group
+            relative
             w-full
             max-w-xl
+            overflow-hidden
             transition-all
             duration-500
             hover:-translate-y-2
           "
         >
-
-          {/* Glow */}
-
+          {/* Brilho sutil ao passar o mouse */}
           <div
+            aria-hidden="true"
             className="
+              pointer-events-none
               absolute
               inset-0
-              opacity-0
-              group-hover:opacity-100
-              transition
-              duration-500
               bg-gradient-to-br
-              from-primary/10
+              from-primary/[0.08]
               via-transparent
-              to-cyan-400/10
-              pointer-events-none
+              to-cyan-400/[0.06]
+              opacity-0
+              transition-opacity
+              duration-500
+              group-hover:opacity-100
             "
           />
 
-          {/* Barra estilo macOS */}
+          <div className="relative">
+            {/* Cabeçalho minimalista */}
+            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
+                Journey / {String(index + 1).padStart(2, "0")}
+              </span>
 
-          <div className="flex items-center gap-2 pb-5 border-b border-white/10">
-
-            <span className="w-3 h-3 rounded-full bg-red-400" />
-
-            <span className="w-3 h-3 rounded-full bg-yellow-400" />
-
-            <span className="w-3 h-3 rounded-full bg-green-400" />
-
-          </div>
-
-          {/* Conteúdo */}
-
-          <div className="pt-6">
-
-            <p
-              className="
-                font-mono
-                uppercase
-                tracking-[0.25em]
-                text-xs
-                text-primary
-              "
-            >
-              {item.year}
-            </p>
-
-            <div className="text-5xl mt-5">
-              {item.icon}
+              <span className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_10px_rgba(124,131,255,0.6)]" />
             </div>
 
-            <h3
-              className="
-                text-3xl
-                font-bold
-                mt-6
-                text-ink
-              "
-            >
-              {item.title}
-            </h3>
+            {/* Conteúdo */}
+            <div className="pt-5">
+              <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
+                {item.year}
+              </p>
 
-            <p
-              className="
-                mt-2
-                font-semibold
-                text-primary
-              "
-            >
-              {item.subtitle}
-            </p>
+              <div className="mt-4 text-4xl transition-transform duration-300 group-hover:scale-105">
+                {item.icon}
+              </div>
 
-            <p
-              className="
-                mt-6
-                leading-8
-                text-muted
-              "
-            >
-              {item.description}
-            </p>
+              <h3 className="mt-5 text-2xl font-bold text-ink sm:text-3xl">
+                {item.title}
+              </h3>
 
-            <div
-              className="
-                flex
-                flex-wrap
-                gap-3
-                mt-8
-              "
-            >
-              {item.technologies.map((tech) => (
-                <Badge key={tech}>
-                  {tech}
-                </Badge>
-              ))}
+              <p className="mt-2 font-semibold text-primary">
+                {item.subtitle}
+              </p>
+
+              <p className="mt-4 text-sm leading-7 text-muted sm:text-base sm:leading-8">
+                {item.description}
+              </p>
+
+              <div className="mt-6 flex flex-wrap gap-2">
+                {item.technologies.map((tech) => (
+                  <Badge key={tech}>{tech}</Badge>
+                ))}
+              </div>
             </div>
-
           </div>
-
         </GlassCard>
-
       </motion.div>
-
     </div>
   );
 }
