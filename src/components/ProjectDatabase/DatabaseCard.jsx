@@ -20,10 +20,7 @@ export default function DatabaseCard({
 }) {
   return (
     <motion.article
-      initial={{
-        opacity: 0,
-        y: 40,
-      }}
+      initial={false}
       whileInView={{
         opacity: 1,
         y: 0,

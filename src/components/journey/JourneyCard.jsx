@@ -30,11 +30,16 @@ export default function JourneyCard({ item, index }) {
           duration: 0.65,
           ease: "easeOut",
         }}
+
         className={`
-          flex
-          w-full
-          ${left ? "justify-start pr-[52%]" : "justify-end pl-[52%]"}
-        `}
+           flex
+            w-full
+           min-w-0
+            ${left
+            ? "justify-start pr-[52%] max-md:justify-end max-md:pr-0 max-md:pl-10"
+            : "justify-end pl-[52%] max-md:pl-10 max-md:pr-0"}
+          `}
+
       >
         <GlassCard
           className="

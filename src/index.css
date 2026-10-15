@@ -47,17 +47,17 @@ body{
 
 }
 
-section{
-
-    position:relative;
-
-    min-height:100vh;
-
-    display:flex;
-
-    align-items:center;
-
+section {
+  position: relative;
+  min-height: 100vh;
 }
+
+@media (max-width: 767px) {
+  section {
+    min-height: auto;
+  }
+}
+
 
 .glass{
 
